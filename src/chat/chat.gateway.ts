@@ -3,27 +3,36 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsResponse,
-  OnGatewayConnection
+  OnGatewayConnection,
+  ConnectedSocket
 } from '@nestjs/websockets';
-import { from, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway()
+interface IMessageBody {
+  roomId: string;
+  message: string;
+}
+
+@WebSocketGateway(3002, { namespace: 'chat' })
 export class ChatGateway implements OnGatewayConnection {
   @WebSocketServer()
   wsServer: Server;
-  clientId: string;
 
   handleConnection(socket) {
-    console.log('handleConnection', socket.client.conn.id);
-    this.clientId = socket.client.conn.id;
+    console.log(socket.id, 'connected');
+  }
+
+  @SubscribeMessage('room')
+  onJoinRoom(@MessageBody() roomId: any, @ConnectedSocket() client: Socket): any {
+    client.join(roomId);
+    client.to(roomId).emit('message', `${client.id} joined in ${roomId}`);
+    return roomId;
   }
 
   @SubscribeMessage('message')
-  onReceiveMessage(@MessageBody() data: any): Observable<WsResponse<number>> {
-    console.log('received data from', this.clientId, data);
-    return data;
+  onReceiveMessage(@MessageBody() messageBody: IMessageBody, @ConnectedSocket() client: Socket): IMessageBody {
+    const {roomId, message} = messageBody;
+    client.to(roomId).emit('message', `${client.id} => ${message}`);
+    return messageBody;
   }
 }

@@ -6,8 +6,8 @@ export class ChatController {
   constructor(private readonly chatService: ChatService) { }
 
   @Get()
-  getChatsAll() {
-    return this.chatService.getChatsAll();
+  getChatRoomsAll() {
+    return this.chatService.getChatRoomsAll();
   }
 
   @Get(':roomId')

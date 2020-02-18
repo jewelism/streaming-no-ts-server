@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ChatService {
-  getChatsAll(): string {
-    return 'Hello chat!!';
+  getChatRoomsAll(): string[] {
+    return ['room1', 'room2', 'room3'];
   }
   getChats(roomId: string): any {
     return `chat roomId ${roomId}`;

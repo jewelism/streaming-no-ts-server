@@ -16,7 +16,7 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return "Hello chat!!"', () => {
-      expect(chatController.getHello()).toBe('Hello chat!!');
+      expect(chatController.getChatRoomsAll()).toBe(['room1', 'room2', 'room3']);
     });
   });
 });
