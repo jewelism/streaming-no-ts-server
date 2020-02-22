@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Chat APP API - Socket" />
+  <title>Chat APP API - Socket</title>
+</head>
+
+<body>
+  <div id="root">
+    <div>
+      <pre>
+        endpoint => //boseok.iptime.org:3002/chat
+
+        emit 보내기
+        on 수신
+        아래 소켓 API 싱글쿼트('') 사이에 있는 게 이벤트 이름,
+        그 다음이 payload interface임. 아래쪽에 정리해놨음
+
+        소켓연결 => emit, on, 'connect'
+        소켓끊기 => emit, on, 'disconnect'
+        
+        room 입장 => emit, 'room', IClient,
+        Response로 현재 접속해있는 멤버들을 리턴해줌 (IClient[])
+        
+        메시지보내기 => emit, 'message', IMessageBody
+        
+        누군가 방에 들어오면 트리거 => on 'newClient',
+        Response로 IClient 리턴해줌.
+        
+
+        interface IMessageBody {
+          senderId: string;
+          roomId: string;
+          date: number;
+          text: string;
+        }
+        export interface IClient {
+          roomId: string;
+          nickname: string;
+          socketId: string;
+        }
+        interface IClientMeta {
+          nickname: string;
+        }
+      </pre>
+    </div>
+  </div>
+</body>
+
+</html>

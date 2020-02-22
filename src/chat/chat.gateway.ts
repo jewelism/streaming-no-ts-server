@@ -9,7 +9,6 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { TRoomMap, IClient, IMessageBody } from './chat.type';
-import { Post } from '@nestjs/common';
 
 @WebSocketGateway(3002, { namespace: 'chat' })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
