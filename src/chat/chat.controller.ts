@@ -14,7 +14,7 @@ export class ChatController {
     return this.chatService.getChatRoomsAll();
   }
 
-  @Post()
+  @Post('room')
   @ApiCreatedResponse({description: '생성됨'})
   @ApiBadRequestResponse({description: '룸 아이디 파싱불가 || 비어있음'})
   @ApiConflictResponse({description: '룸 아이디가 중복'})
