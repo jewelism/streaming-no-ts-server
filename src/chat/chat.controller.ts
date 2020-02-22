@@ -1,25 +1,25 @@
-import { Controller, Get, Param, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { ChatGateway } from './chat.gateway';
+import { CreateRoomDto } from './chat.dto';
+import { ApiBody, ApiTags, ApiConflictResponse, ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 
+@ApiTags('chat')
 @Controller('chat')
-export class ChatController extends ChatGateway {
-  constructor(private readonly chatService: ChatService) { 
-    super();
-  }
+export class ChatController {
+  constructor(private readonly chatService: ChatService) { }
 
   @Get('rooms')
+  @ApiOkResponse({description: '룸 아이디 string array'})
   getChatRoomsAll() {
     return this.chatService.getChatRoomsAll();
   }
 
-  // @Get(':roomId')
-  // getChats(@Param('roomId') roomId) {
-  //   return this.chatService.getChats(roomId);
-  // }
-
-  // @Post(':roomId')
-  // enterChatRoom(@Body('roomId') roomId) {
-  //   return this.chatService.enterChatRoom(roomId);
-  // }
+  @Post()
+  @ApiCreatedResponse({description: '생성됨'})
+  @ApiBadRequestResponse({description: '룸 아이디 파싱불가 || 비어있음'})
+  @ApiConflictResponse({description: '룸 아이디가 중복'})
+  @ApiBody({ type: CreateRoomDto })
+  createRoom(@Body() createRoomDto: CreateRoomDto) {
+    return this.chatService.createRoom(createRoomDto.roomId);
+  }
 }

@@ -20,7 +20,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log(socket.id, 'connected');
   }
   handleDisconnect(socket) {
+    for (const [roomId, value] of this.roomMap) {
+      value.delete(socket.id);
+      if (value.size === 0) {
+        this.roomMap.delete(roomId);
+      }
+    }
     console.log(socket.id, 'disconnected');
+    // console.log(this.roomMap);
   }
 
   @SubscribeMessage('room')
@@ -33,7 +40,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const newMemberMap = new Map([[client.id, clientMeta]]);
       this.roomMap.set(roomId, newMemberMap);
     }
-    console.log(this.roomMap);
     client.join(roomId);
     client.to(roomId).emit('newClient', newClient);
     // const roomData = client.adapter.rooms;
